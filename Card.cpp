@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "Card.hpp"
+#include "Globals.hpp"
 
 /**
  *
@@ -17,7 +18,20 @@ Card::~Card() {}
  *
  */
 void Card::printCard() {
-    std::cout << stringifyCard();
+    std::string s = stringifyCard(), c;
+    if (s[0] == 'S') {
+        c = green;
+    } else if (s[0] == 'H') {
+        c = red;
+    } else if (s[0] == 'C') {
+        c = yellow;
+    } else if (s[0] == 'D') {
+        c = cyan;
+    } else {
+        c = white;
+    }
+
+    std::cout << c << s << reset;
 }
 
 std::string Card::stringifyCard() {
