@@ -9,7 +9,6 @@
 Card::Card(Suit _suit, Rank _rank) {
     rank = _rank;
     suit = _suit;
-    value = (int)_rank;
 }
 
 Card::~Card() {}

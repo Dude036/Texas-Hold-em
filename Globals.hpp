@@ -26,7 +26,6 @@ enum Suit {
 };
 
 enum Rank {
-    ACE = 1,
     TWO,
     THREE,
     FOUR,
@@ -38,7 +37,8 @@ enum Rank {
     TEN,
     JACK,
     QUEEN,
-    KING
+    KING,
+    ACE
 };
 
 enum PlayerState {

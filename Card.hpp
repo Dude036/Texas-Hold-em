@@ -12,12 +12,19 @@ class Card {
     void printCard();
     Suit getSuit() { return suit; };
     Rank getRank() { return rank; };
-    int getValue() { return value; };
     std::string stringifyCard();
+
+    // Comparison Operators for sorting
+    friend bool operator<(const Card& l, const Card& r) {
+        return ((int)l.rank < (int)r.rank);
+    }
+
+    friend bool operator>(const Card& l, const Card& r) {
+        return ((int)r.rank < (int)l.rank);
+    }
   private:
     Suit suit;
     Rank rank;
-    int value;
 };
 
 #endif // CARD_HPP
