@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Card.hpp"
+#include "Globals.hpp"
 
 class Deck
 {

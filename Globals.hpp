@@ -3,6 +3,7 @@
 
 const int INITIAL_POT = 500;
 const int BLIND = INITIAL_POT / 100;
+const unsigned int TOTAL_DECKS = 1;
 
 enum RankedWin {
     HIGH_CARD,
