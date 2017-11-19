@@ -18,7 +18,6 @@ class Deck
     std::vector<Card> getPlayedCards() { return usedCard; }
 
   private:
-    const unsigned int TOTAL_DECKS = 1;
     std::vector<Card> pullDeck;
     std::vector<Card> usedCard;
 };
