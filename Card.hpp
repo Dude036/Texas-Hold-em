@@ -16,11 +16,15 @@ class Card {
 
     // Comparison Operators for sorting
     friend bool operator<(const Card& l, const Card& r) {
-        return ((int)l.rank < (int)r.rank);
+        if (l.rank == r.rank) {
+            return (l.suit < r.suit);
+        } else {
+            return (l.rank < r.rank);
+        }
     }
 
     friend bool operator>(const Card& l, const Card& r) {
-        return ((int)r.rank < (int)l.rank);
+        return (r.rank < l.rank);
     }
   private:
     Suit suit;

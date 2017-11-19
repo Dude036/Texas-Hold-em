@@ -21,7 +21,7 @@ void Deck::fillDeck() {
         // For every suit
         for (int i=SPADE; i<=DIAMOND; i++) {
             // for every number
-            for (int j=ACE; j<=KING; j++) {
+            for (int j=TWO; j<=ACE; j++) {
                 pullDeck.push_back(Card((Suit)i,(Rank)j));
             }
         }
