@@ -17,9 +17,20 @@ Card::~Card() {}
 /**
  *
  */
-void Card::printCard(bool override = false) {
-    if (override) return;
+void Card::printCard() {
+    std::cout << stringifyCard();
+}
 
+int Card::getHighValue() {
+    if (rank == ACE) {
+        return 11;
+    } else {
+        return value;
+    }
+}
+
+
+std::string Card::stringifyCard() {
     std::string retval = "";
     switch (suit) {
         case CLUB:
@@ -52,14 +63,5 @@ void Card::printCard(bool override = false) {
         case KING:  retval+="K"; break;
 
     }
-
-    std::cout<<retval;
-}
-
-int Card::getHighValue() {
-    if (rank == ACE) {
-        return 11;
-    } else {
-        return value;
-    }
+    return retval;
 }

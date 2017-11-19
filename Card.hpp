@@ -1,17 +1,20 @@
 #ifndef CARD_HPP
 #define CARD_HPP
 
+#include <string>
+
 #include "Globals.hpp"
 
 class Card {
   public:
     Card(Suit, Rank);
     ~Card();
-    void printCard(bool);
+    void printCard();
     Suit getSuit() { return suit; };
     Rank getRank() { return rank; };
     int getHighValue();
     int getLowValue() { return value; };
+    std::string stringifyCard();
   private:
     Suit suit;
     Rank rank;
