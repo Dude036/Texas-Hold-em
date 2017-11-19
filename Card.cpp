@@ -21,15 +21,6 @@ void Card::printCard() {
     std::cout << stringifyCard();
 }
 
-int Card::getHighValue() {
-    if (rank == ACE) {
-        return 11;
-    } else {
-        return value;
-    }
-}
-
-
 std::string Card::stringifyCard() {
     std::string retval = "";
     switch (suit) {

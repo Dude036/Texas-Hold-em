@@ -12,8 +12,7 @@ class Card {
     void printCard();
     Suit getSuit() { return suit; };
     Rank getRank() { return rank; };
-    int getHighValue();
-    int getLowValue() { return value; };
+    int getValue() { return value; };
     std::string stringifyCard();
   private:
     Suit suit;
