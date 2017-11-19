@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <chrono>
+#include <random>
 #include <vector>
 
 #include "Deck.hpp"
@@ -45,5 +47,6 @@ Card Deck::draw() {
 }
 
 void Deck::shuffle() {
-    std::random_shuffle(pullDeck.begin(), pullDeck.end());
+    std::mt19937 tw(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    std::shuffle(pullDeck.begin(), pullDeck.end(), tw);
 }
