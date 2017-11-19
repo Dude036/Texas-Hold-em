@@ -3,33 +3,13 @@
 
 #include "Card.hpp"
 
-Card::Card() {}
-
 /**
  *
  */
 Card::Card(Suit _suit, Rank _rank) {
     rank = _rank;
     suit = _suit;
-    switch (_rank) {
-        case ACE:
-        case TWO:
-        case THREE:
-        case FOUR:
-        case FIVE:
-        case SIX:
-        case SEVEN:
-        case EIGHT:
-        case NINE:
-        case TEN:
-            value = (int)_rank;
-            break;
-        case JACK:
-        case QUEEN:
-        case KING:
-            value = 10;
-            break;
-    }
+    value = (int)_rank;
 }
 
 Card::~Card() {}

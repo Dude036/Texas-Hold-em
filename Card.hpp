@@ -5,7 +5,6 @@
 
 class Card {
   public:
-    Card();
     Card(Suit, Rank);
     ~Card();
     void printCard(bool);
