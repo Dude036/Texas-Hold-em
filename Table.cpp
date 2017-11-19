@@ -19,8 +19,10 @@ void Table::addPlayer(Player newPlayer) {
 
 void Table::removePlayers() {
     for (int i = 0; i < (int)players.size(); ++i) {
+        // Remove player from game if Broke, or can't play again
         if (players[i].getState() == BROKE) {
-            // Remove player from game
+            players.erase(players.begin()+i);
+        } else if (!players[i].canPlayAgain()) {
             players.erase(players.begin()+i);
         }
     }
@@ -37,10 +39,16 @@ int Table::playRound() {
     for (int i = 0; i < (int)players.size(); ++i) {
         if (roundsPlayed + i % players.size() == 0) {
             // double blind
+            players[i].buyIn(BLIND * 1.5);
+            tablePot += BLIND * 1.5;
         } else if (roundsPlayed + i % players.size() == 1) {
             // single blind
+            players[i].buyIn(BLIND * 1.25);
+            tablePot += BLIND * 1.25;
         } else {
             // Just initialBet
+            players[i].buyIn(BLIND);
+            tablePot += BLIND;
         }
     }
 

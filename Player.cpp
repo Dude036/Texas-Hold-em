@@ -7,9 +7,8 @@
 #include "Globals.hpp"
 #include "Player.hpp"
 
-Player::Player(AIPlayer* newPlayer, std::string newName) {
-    player = newPlayer;
-    playerName = newName;
+Player::Player(AIPlayer newPlayer, std::string newName)
+: player(newPlayer), playerName(newName) {
     earnings = INITIAL_POT;
     state = IN_PLAY;
 }
@@ -20,7 +19,11 @@ Player::~Player() {
 }
 
 void Player::buyIn(int amount) {
-
+    if (earnings < 0) {
+        state = BROKE;
+        return;
+    }
+    earnings -= amount;
 }
 
 void Player::addMoney(int amount) {
@@ -42,6 +45,9 @@ PlayerState Player::getState() {
     return state;
 }
 
+bool Player::canPlayAgain() {
+    return earnings >= BLIND * 2;
+}
 
 RankedWin Player::getHighState(std::vector<Card> river) {
     // Combine the 2 vectors for simple searching
@@ -145,4 +151,15 @@ RankedWin Player::getHighState(std::vector<Card> river) {
         // HIGH_CARD
         return HIGH_CARD;
     }
+}
+
+
+/* AI Player Determined Functions */
+int Player::initialBet() {
+    return player.initialBet();
+}
+
+int Player::bet(std::vector<Card> hand, std::vector<Card> river,
+         unsigned int callBet) {
+    return player.bet(hand, river, callBet);
 }

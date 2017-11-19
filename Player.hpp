@@ -10,20 +10,22 @@
 class Player
 {
   public:
-    Player(AIPlayer*, std::string);
+    Player(AIPlayer, std::string);
     ~Player();
     void buyIn(int);
     void addMoney(int);
     int getEarnings();
     void addCard(Card);
     PlayerState getState();
+    bool canPlayAgain();
     RankedWin getHighState(std::vector<Card>);
     // Player Functions
+    int initialBet();
     int bet(std::vector<Card>, std::vector<Card>, unsigned int);
 
   private:
     std::vector<Card> hand;
-    AIPlayer* player;
+    AIPlayer player;
     PlayerState state;
     std::string playerName;
     int earnings;
