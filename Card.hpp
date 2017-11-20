@@ -8,7 +8,6 @@
 class Card {
   public:
     Card(Suit, Rank);
-    ~Card();
     void printCard();
     Suit getSuit() { return suit; };
     Rank getRank() { return rank; };

@@ -12,8 +12,6 @@ Card::Card(Suit _suit, Rank _rank) {
     suit = _suit;
 }
 
-Card::~Card() {}
-
 /**
  *
  */
@@ -22,7 +20,7 @@ void Card::printCard() {
     if (s[0] == 'S') {
         c = green;
     } else if (s[0] == 'H') {
-        c = red;
+        c = magenta;
     } else if (s[0] == 'C') {
         c = yellow;
     } else if (s[0] == 'D') {
@@ -31,7 +29,7 @@ void Card::printCard() {
         c = white;
     }
 
-    std::cout << c << s << reset;
+    std::cout << c << s << reset << " ";
 }
 
 std::string Card::stringifyCard() {
