@@ -21,7 +21,7 @@ class Player
     RankedWin getHighState(std::vector<Card>);
     // Player Functions
     int initialBet();
-    int bet(std::vector<Card>, std::vector<Card>, unsigned int);
+    int bet(std::vector<Card>, unsigned int);
 
   private:
     std::vector<Card> hand;
