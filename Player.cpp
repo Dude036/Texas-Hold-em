@@ -65,8 +65,39 @@ Card Player::getHighCard(std::vector<Card> river) {
 
     // Sort the Deck by smaller Rank, then largest suit
     std::sort(v.begin(), v.end());
-
     return v[v.size()-1];
+}
+
+Card Player::getSecondHigh(std::vector<Card> river) {
+    // Combine the Two vectors for simple searching
+    std::vector<Card> v(river);
+    for (int i = 0; i < (int)hand.size(); ++i) {
+        v.push_back(hand[i]);
+    }
+
+    // Sort the Deck by smaller Rank, then largest suit
+    std::sort(v.begin(), v.end());
+    return v[v.size()-2];
+}
+
+std::vector<Card> Player::getHighPair(std::vector<Card> river) {
+    std::vector<Card> v(river);
+    for (int i = 0; i < (int)hand.size(); ++i) {
+        v.push_back(hand[i]);
+    }
+
+    // Sort the Deck by smaller Rank, then largest suit
+    std::sort(v.begin(), v.end());
+    std::vector<Card> retVal;
+    for (int i = 0; i < (int)v.size(); ++i) {
+        for (int j = i+1; j < (int)v.size(); ++j) {
+            if (v[i].getRank() == v[j].getRank()) {
+                retVal.push_back(Card(v[i].getSuit(), v[i].getRank()));
+                retVal.push_back(Card(v[j].getSuit(), v[j].getRank()));
+            }
+        }
+    }
+    return retVal;
 }
 
 RankedWin Player::getHighState(std::vector<Card> river) {
