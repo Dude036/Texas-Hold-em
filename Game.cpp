@@ -32,7 +32,10 @@ void Game::play(int rounds) {
     }
 
     for (int i = 0; i < rounds; ++i) {
-        playerScores[table.playRound()] += 1;
+        std::vector<int> v = table.playRound();
+        for (int i = 0; i < (int)v.size(); ++i) {
+            playerScores[v[i]] += 1;
+        }
     }
 }
 

@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "Globals.hpp"
 #include "Player.hpp"
 #include "Table.hpp"
@@ -26,12 +28,13 @@ void Table::removePlayers() {
     }
 }
 
-int Table::playRound() {
+std::vector<int> Table::playRound() {
     // Reset variables for play
     tablePot = 0;
     highBet = 0;
     ++roundsPlayed;
     removePlayers();
+    river.clear();
 
     // Buy in + Blinds
     for (int i = 0; i < (int)players.size(); ++i) {
@@ -97,10 +100,15 @@ int Table::playRound() {
     } while (!playerPotsNormalized());
 
     // Determine winner
-    int winner = whoWon();
+    std::vector<int> winner = whoWon();
 
-    // Move Pot to winning player
-    players[winner].addMoney(tablePot);
+    // Special cases for Winner
+    int dividedPot = tablePot / winner.size();
+
+    // Move Pot to winning players
+    for (int i = 0; i < (int)winner.size(); ++i) {
+        players[winner[i]].addMoney(dividedPot);
+    }
 
     // Clear Hands
     for (int i = 0; i < (int)players.size(); ++i) {
@@ -163,31 +171,142 @@ bool Table::playerPotsNormalized() {
     return true;
 }
 
-int Table::whoWon() {
-    int winner = 0;
-    std::vector<RankedWin> ranks;
+bool sortBySecond(const std::pair<int, RankedWin>& l,
+        const std::pair<int, RankedWin>& r) {
+    return (l.second > r.second);
+}
+
+
+int Table::comparePairs(std::vector<Card> l, std::vector<Card> r) {
+    Card cl = l[1], cr = r[1];
+    if (cl > cr) {
+        return -1;
+    } else if (cl < cr) {
+        return 1;
+    } else if (cl.getSuit() > cr.getSuit()) {
+        return -1;
+    } else if (cl.getSuit() < cr.getSuit()) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+int Table::compareHighs(Card l, Card r) {
+    if (l > r) {
+        return -1;
+    } else if (l < r) {
+        return 1;
+    } else if (l.getSuit() > r.getSuit()) {
+        return -1;
+    } else if (l.getSuit() < r.getSuit()) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+std::vector<int> Table::whoWon() {
+    // Initialize the winner vector
+    std::vector<std::pair<int, RankedWin> > ranks;
     // Get Ranks
     for (int i = 0; i < (int)players.size(); ++i) {
-        ranks.push_back(players[i].getHighState(river));
+        ranks.push_back(std::make_pair(i, players[i].getHighState(river)));
     }
 
-    // Get Winner from ranks
-    RankedWin highestWin;
-    for (int i = 0; i < (int)ranks.size() - 1; ++i) {
-        if (ranks[i] < ranks[i+1]) {
-            winner = i+1;
-            highestWin = ranks[i+1];
-        }
-    }
+    // Sort Ranks by winning rank in ascending order
+    std::sort(ranks.begin(), ranks.end(), sortBySecond);
 
-    // Check for Tie
+    // Get Highest Winner
+    std::vector<int> winners;
+    winners.push_back(ranks[0].first);
+
+    // Check for Ties
     for (int i = 0; i < (int)ranks.size(); ++i) {
-        if (i == winner) { continue; }
-        if (highestWin == ranks[i]) {
-            // Tie Found
+        if (ranks[i].second == ranks[i+1].second) {
+            // Tie found
+           if (ranks[i].second >= STRAIGHT) {
+                // Already used a five card hand. Get High card
+                // Compare high based on the sorted ranks position in Player vector
+                int res = compareHighs(players[ranks[i].first].getHighCard(river),
+                                     players[ranks[i+1].first].getHighCard(river));
 
+                if (res > 0) {
+                    // Check if Right hand side is bigger
+                    winners[winners.size()-1] = ranks[i].first;
+                } else if (res < 0) {
+                    // Check if Left hand side is bigger
+                    winners[winners.size()-1] = ranks[i+1].first;
+                } else {
+                    // Tie. Add it to Players
+                    winners.push_back(ranks[i+1].first);
+                }
+            } else {
+                // All other scenarios deal with an ability to have a pair
+                std::vector<Card> vi = players[ranks[i].first].getHighPair(river);
+                std::vector<Card> vj = players[ranks[i+1].first].getHighPair(river);
+
+                // Make sure the pairs exist
+                if (vi.size() == 0 || vj.size() == 0) {
+                    // No Pairs Found, check high Card
+                    int res = compareHighs(players[ranks[i].first].getHighCard(river),
+                                         players[ranks[i+1].first].getHighCard(river));
+
+                    if (res > 0) {
+                        winners[winners.size()-1] = ranks[i+1].first;
+                    } else if (res < 0) {
+                        winners[winners.size()-1] = ranks[i].first;
+                    } else {
+                        // Tie or in River - Check second high
+                        int res = compareHighs(players[ranks[i].first].getSecondHigh(river),
+                                         players[ranks[i+1].first].getSecondHigh(river));
+
+                        if (res > 0) {
+                            winners[winners.size()-1] = ranks[i+1].first;
+                        } else if (res < 0) {
+                            winners[winners.size()-1] = ranks[i].first;
+                        } else {
+                            // River contians highest card. just put it in the vector
+                            winners.push_back(ranks[i+1].first);
+                        }
+                    }
+                } else {
+                    // Pairs Found
+                    int res = comparePairs(vi, vj);
+                    if (res > 0) {
+                        winners[winners.size()-1] = ranks[i+1].first;
+                    } else if (res < 0) {
+                        winners[winners.size()-1] = ranks[i].first;
+                    } else {
+                        // Tie on the pairs, Check High card
+                        int res = compareHighs(players[ranks[i].first].getHighCard(river),
+                                             players[ranks[i+1].first].getHighCard(river));
+
+                        if (res > 0) {
+                            winners.push_back(ranks[i+1].first);
+                        } else if (res < 0) {
+                            winners.push_back(ranks[i].first);
+                        } else {
+                            // Tie or in River - Check second high
+                            int res = compareHighs(players[ranks[i].first].getSecondHigh(river),
+                                             players[ranks[i+1].first].getSecondHigh(river));
+
+                            if (res > 0) {
+                                winners[winners.size()-1] = ranks[i+1].first;
+                            } else if (res < 0) {
+                                winners[winners.size()-1] = ranks[i].first;
+                            } else {
+                                // Unresolved. Just put it in the vector
+                                winners.push_back(ranks[i+1].first);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            // Winners can't join
+            break;
         }
     }
 
-    return winner;
+    return winners;
 }

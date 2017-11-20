@@ -13,7 +13,7 @@ class Table
     ~Table();
     void addPlayer(Player);
     void removePlayers();
-    int playRound();
+    std::vector<int> playRound();
     std::string getPlayerNameByIndex(int);
     int getPlayerEarningsbyIndex(int);
 
@@ -23,8 +23,9 @@ class Table
   private:
     void playBettingRound();
     bool playerPotsNormalized();
-    void fillPots();
-    int whoWon();
+    int comparePairs(std::vector<Card>, std::vector<Card>);
+    int compareHighs(Card, Card);
+    std::vector<int> whoWon();
 
     Deck deck;
     std::vector<Player> players;
