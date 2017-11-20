@@ -20,6 +20,7 @@ class Player
     void fold();
     bool canPlayAgain();
     RankedWin getHighState(std::vector<Card>);
+    std::string getPlayerName();
     // Player Functions
     int initialBet();
     int bet(std::vector<Card>, unsigned int);

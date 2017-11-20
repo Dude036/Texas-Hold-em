@@ -168,3 +168,7 @@ int Player::initialBet() {
 int Player::bet(std::vector<Card> river, unsigned int callBet) {
     return player.bet(hand, river, callBet);
 }
+
+std::string Player::getPlayerName() {
+    return playerName;
+}

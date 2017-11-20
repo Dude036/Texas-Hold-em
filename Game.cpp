@@ -13,8 +13,11 @@ Game::~Game() {
     std::cout << "===Final Score===" << std::endl;
     std::cout << "           " << "Rounds Won | Final Pot" << std::endl;
     for (int i = 0; i < (int)playerScores.size(); ++i) {
-        std::cout << "Player " << i+1 << ':';
-        std::cout << std::endl;
+        std::cout << "Player " << std::left << std::setw(2) << i+1 << ": "
+                  << table.getPlayerNameByIndex(i) << std::endl
+                  << "           " << std::setw(11) << playerScores[i] << "  "
+                  << std::setw(9) << table.getPlayerEarningsbyIndex(i)
+                  << std::endl;
     }
 }
 
@@ -22,10 +25,13 @@ void Game::play(int rounds) {
     if (playerScores.size() < 2) {
         std::cout << "Not enough Players!" << std::endl;
         return;
+    } else if (playerScores.size() > 99) {
+        std::cout << "Too many Players!" << std::endl;
+        return;
     }
 
     for (int i = 0; i < rounds; ++i) {
-        table.playRound();
+        playerScores[table.playRound()] += 1;
     }
 }
 
