@@ -33,7 +33,7 @@ int AIPlayer::initialBet() {
  *      if folding,  return -1
  *      if checking, return 0
  *      if raising,  return (how much more to raise)
- *          calbet == 5, returning 5 will raise the bet to 10;
+ *          callbet == 5, returning 5 will raise the bet to 10;
  */
 int AIPlayer::bet(std::vector<Card> hand, std::vector<Card> river,
         unsigned int callBet) {
