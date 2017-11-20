@@ -11,8 +11,5 @@ int main(int argc, char const *argv[])
     game.addUser(Player(AIPlayer(INITIAL_POT), "Kevin"));
 
     game.play(rounds);
-    std::cout << "End Game" << std::endl;
-    game.endGame();
-    std::cout << "Game End" << std::endl;
     return 0;
 }
