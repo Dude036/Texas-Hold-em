@@ -14,6 +14,8 @@ class Table
     void addPlayer(Player);
     void removePlayers();
     int playRound();
+    std::string getPlayerNameByIndex(int);
+    int getPlayerEarningsbyIndex(int);
 
     std::vector<Card> river;
     unsigned int tablePot;
@@ -22,6 +24,7 @@ class Table
     void playBettingRound();
     bool playerPotsNormalized();
     void fillPots();
+    int whoWon();
 
     Deck deck;
     std::vector<Player> players;

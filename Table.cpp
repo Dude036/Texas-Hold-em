@@ -65,8 +65,6 @@ int Table::playRound() {
         }
     }
 
-    // Fill highBet
-
     // Initial Round of betting
     do {
         playBettingRound();
@@ -103,12 +101,19 @@ int Table::playRound() {
 
     // Determine winner
 
-    // Move Pot to winning player, remove earnings fromm users
+    // Move Pot to winning player, remove earnings from users
 
     // return winner of the round
     return 0;
 }
 
+std::string Table::getPlayerNameByIndex(int i) {
+    return players[i].getPlayerName();
+}
+
+int Table::getPlayerEarningsbyIndex(int i) {
+    return players[i].getEarnings();
+}
 
 void Table::playBettingRound() {
     for (int i = 0; i < (int)players.size(); ++i) {
@@ -116,15 +121,30 @@ void Table::playBettingRound() {
             // Player has folded
             continue;
         }
-        // Still is IN_PLAY
+        // Still is IN_PLAY or BROKE
         int betAmount = players[i].bet(river, highBet);
         if (betAmount == -1) {
             // Fold State
-        } else if (betAmount > 0 && betAmount <= player[i].getEarning()) {
+            players[i].fold();
+        } else if (betAmount > 0 && betAmount <= players[i].getEarnings()) {
             // Raising
+            int diff = highBet - playerPot[i];
+            if (players[i].addMoney(-1*diff)) {
+                tablePot += betAmount + diff;
+                playerPot[i] += betAmount;
+                highBet = playerPot[i];
+            } else {
+                players[i].fold();
+            }
         } else {
             // Default and Checking
-
+            int diff = highBet - playerPot[i];
+            if (players[i].addMoney(-1*diff)) {
+                tablePot += diff;
+                playerPot[i]  += diff;
+            } else  {
+                players[i].fold();
+            }
         }
     }
 }
@@ -137,4 +157,33 @@ bool Table::playerPotsNormalized() {
         }
     }
     return true;
+}
+
+int Table::whoWon() {
+    int winner;
+    std::vector<RankedWin> ranks;
+    // Get Ranks
+    for (int i = 0; i < (int)players.size(); ++i) {
+        ranks.push_back(players[i].getHighState(river));
+    }
+
+    // Get Winner from ranks
+    RankedWin highestWin;
+    for (int i = 0; i < (int)ranks.size() - 1; ++i) {
+        if (ranks[i] < ranks[i+1]) {
+            winner = i+1;
+            highestWin = ranks[i+1];
+        }
+    }
+
+    // Check for Tie
+    for (int i = 0; i < (int)ranks.size(); ++i) {
+        if (i == winner) { continue; }
+        if (highestWin == ranks[i]) {
+            // Tie Found
+
+        }
+    }
+
+    return winner;
 }
