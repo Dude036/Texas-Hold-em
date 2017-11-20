@@ -9,10 +9,9 @@ class AIPlayer
 {
   public:
     AIPlayer(int);
-    ~AIPlayer();
-    int initialBet();
-    int bet(std::vector<Card>, std::vector<Card>, unsigned int);
-    void endRound();
+    virtual int initialBet();
+    virtual int bet(std::vector<Card>, std::vector<Card>, unsigned int);
+    virtual void endRound(std::vector<Card>, std::vector<Card>, std::vector<Card>, int);
   private:
     // Add anything you need
 };

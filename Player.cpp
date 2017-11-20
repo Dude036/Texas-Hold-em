@@ -197,6 +197,10 @@ RankedWin Player::getHighState(std::vector<Card> river) {
     }
 }
 
+std::string Player::getPlayerName() {
+    return playerName;
+}
+
 
 /* AI Player Determined Functions */
 int Player::initialBet() {
@@ -207,6 +211,8 @@ int Player::bet(std::vector<Card> river, unsigned int callBet) {
     return player.bet(hand, river, callBet);
 }
 
-std::string Player::getPlayerName() {
-    return playerName;
+
+void Player::endRound(std::vector<Card> river, std::vector<Card> played,
+        int net) {
+    player.endRound(hand, river, played, net);
 }

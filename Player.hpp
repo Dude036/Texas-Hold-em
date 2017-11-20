@@ -28,6 +28,7 @@ class Player
     // Player Functions
     int initialBet();
     int bet(std::vector<Card>, unsigned int);
+    void endRound(std::vector<Card>, std::vector<Card>, int);
 
   private:
     std::vector<Card> hand;

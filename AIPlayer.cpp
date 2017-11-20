@@ -1,10 +1,11 @@
 #include "AIPlayer.hpp"
 
-// Basic Constructor
+/**
+ * Basic Constructor
+ * @brief Basic Constructor
+ * @param int Your initial betting pool
+ */
 AIPlayer::AIPlayer(int bettingPool) {}
-
-// Basic Descructor
-AIPlayer::~AIPlayer() {}
 
 /**
  * You may initially bet as much as your earnings
@@ -39,4 +40,20 @@ int AIPlayer::bet(std::vector<Card> hand, std::vector<Card> river,
         unsigned int callBet) {
     // Initial Player always calls
     return 0;
+}
+
+/**
+ * This function will be called at the end of every game round. This
+ / will contain all the cards that weren't folded. If there was a fold,
+ * that hand is discarded. There's nothing to do with the cards, because
+ * the round is
+ * @brief Contains all of the cards you may card about for counting cards
+ * @param std::vector<Card> Your Hand
+ * @param std::vector<Card> All of the Other Players hands
+ * @param std::vector<Card> The River
+ */
+void AIPlayer::endRound(std::vector<Card> hand, std::vector<Card> river,
+        std::vector<Card> other, int net) {
+    // Default Player doesn't care about counting cards.
+    return;
 }
