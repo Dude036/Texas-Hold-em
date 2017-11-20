@@ -20,6 +20,7 @@ class Player
     void fold();
     bool canPlayAgain();
     void clearHand();
+    Card getHighCard(std::vector<Card>);
     RankedWin getHighState(std::vector<Card>);
     std::string getPlayerName();
     // Player Functions

@@ -20,10 +20,10 @@ enum RankedWin {
 };
 
 enum Suit {
-    SPADE,
-    HEART,
+    DIAMOND,
     CLUB,
-    DIAMOND
+    HEART,
+    SPADE
 };
 
 enum Rank {

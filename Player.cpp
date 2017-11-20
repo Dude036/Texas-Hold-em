@@ -56,6 +56,19 @@ void Player::clearHand() {
     hand.clear();
 }
 
+Card Player::getHighCard(std::vector<Card> river) {
+    // Combine the Two vectors for simple searching
+    std::vector<Card> v(river);
+    for (int i = 0; i < (int)hand.size(); ++i) {
+        v.push_back(hand[i]);
+    }
+
+    // Sort the Deck by smaller Rank, then largest suit
+    std::sort(v.begin(), v.end());
+
+    return v[v.size()-1];
+}
+
 RankedWin Player::getHighState(std::vector<Card> river) {
     // Combine the 2 vectors for simple searching
     std::vector<Card> v(river);
