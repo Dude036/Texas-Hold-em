@@ -110,6 +110,34 @@ std::vector<int> Table::playRound() {
         players[winner[i]].addMoney(dividedPot);
     }
 
+    // Inform Players of cards played
+    std::vector<Card> visiblyPlayed;
+    for (int i = 0; i < (int)players.size(); ++i) {
+        if (players[i].getState() == FOLD) { continue; }
+        else {
+            visiblyPlayed.push_back(players[i].getHighCard(std::vector<Card>()));
+            visiblyPlayed.push_back(players[i].getSecondHigh(std::vector<Card>()));
+        }
+    }
+
+    for (int i = 0; i < (int)players.size(); ++i) {
+        bool inWinners = false;
+        for (int j = 0; j < (int)winner.size(); ++j) {
+            if (i == winner[j]) {
+                inWinners = true;
+                break;
+            }
+        }
+
+        int net;
+        if (inWinners) {
+            net = tablePot / winner.size();
+        } else {
+            net = playerPot[i] * -1;
+        }
+        players[i].endRound(river, visiblyPlayed, net);
+    }
+
     // Clear Hands
     for (int i = 0; i < (int)players.size(); ++i) {
         players[i].clearHand();
