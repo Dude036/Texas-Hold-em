@@ -13,10 +13,7 @@ Player::Player(AIPlayer newPlayer, std::string newName)
     state = IN_PLAY;
 }
 
-Player::~Player() {
-    hand.clear();
-    earnings = 0;
-}
+Player::~Player() {}
 
 void Player::buyIn(int amount) {
     if (earnings < 0) {
@@ -55,6 +52,10 @@ bool Player::canPlayAgain() {
     return earnings >= BLIND * 2;
 }
 
+void Player::clearHand() {
+    hand.clear();
+}
+
 RankedWin Player::getHighState(std::vector<Card> river) {
     // Combine the 2 vectors for simple searching
     std::vector<Card> v(river);
@@ -64,13 +65,6 @@ RankedWin Player::getHighState(std::vector<Card> river) {
 
     // Sort the Deck by smaller Rank, then largest suit
     std::sort(v.begin(), v.end());
-
-    std::cout << "Sorted: | Size=" << v.size() << std::endl;
-    for (int i = 0; i < (int)v.size(); ++i) {
-        v[i].printCard();
-        std::cout << "\t";
-    }
-
 
     // Start for the least likely scenerio to the most likely
     /* Check for Straight Aspect */

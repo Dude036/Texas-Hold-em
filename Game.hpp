@@ -14,6 +14,7 @@ class Game {
     ~Game();
     void play(int);
     void addUser(Player);
+    void endGame();
 
     Table table;
   private:

@@ -8,10 +8,7 @@ Table::Table() {
     roundsPlayed = 0;
 }
 
-Table::~Table() {
-    players.clear();
-    river.clear();
-}
+Table::~Table() {}
 
 void Table::addPlayer(Player newPlayer) {
     players.push_back(newPlayer);
@@ -68,7 +65,7 @@ int Table::playRound() {
     // Initial Round of betting
     do {
         playBettingRound();
-    } while (playerPotsNormalized());
+    } while (!playerPotsNormalized());
 
     // Deal 3 to the River
     /*Burn*/ deck.draw();
@@ -79,7 +76,7 @@ int Table::playRound() {
     // Second Round of betting
     do {
         playBettingRound();
-    } while (playerPotsNormalized());
+    } while (!playerPotsNormalized());
 
     // Deal to River
     /*Burn*/ deck.draw();
@@ -88,7 +85,7 @@ int Table::playRound() {
     // Third Round of betting
     do {
         playBettingRound();
-    } while (playerPotsNormalized());
+    } while (!playerPotsNormalized());
 
     // Deal to River
     /*Burn*/ deck.draw();
@@ -97,14 +94,21 @@ int Table::playRound() {
     // Final Round of betting
     do {
         playBettingRound();
-    } while (playerPotsNormalized());
+    } while (!playerPotsNormalized());
 
     // Determine winner
+    int winner = whoWon();
 
-    // Move Pot to winning player, remove earnings from users
+    // Move Pot to winning player
+    players[winner].addMoney(tablePot);
+
+    // Clear Hands
+    for (int i = 0; i < (int)players.size(); ++i) {
+        players[i].clearHand();
+    }
 
     // return winner of the round
-    return 0;
+    return winner;
 }
 
 std::string Table::getPlayerNameByIndex(int i) {
