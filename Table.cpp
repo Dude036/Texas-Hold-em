@@ -164,7 +164,7 @@ bool Table::playerPotsNormalized() {
 }
 
 int Table::whoWon() {
-    int winner;
+    int winner = 0;
     std::vector<RankedWin> ranks;
     // Get Ranks
     for (int i = 0; i < (int)players.size(); ++i) {
