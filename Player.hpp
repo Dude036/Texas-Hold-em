@@ -17,6 +17,7 @@ class Player
     int getEarnings();
     void addCard(Card);
     PlayerState getState();
+    void fold();
     bool canPlayAgain();
     RankedWin getHighState(std::vector<Card>);
     // Player Functions

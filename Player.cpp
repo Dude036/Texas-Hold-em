@@ -45,6 +45,10 @@ PlayerState Player::getState() {
     return state;
 }
 
+void Player::fold() {
+    state = FOLD;
+}
+
 bool Player::canPlayAgain() {
     return earnings >= BLIND * 2;
 }
