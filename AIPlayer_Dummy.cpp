@@ -1,3 +1,5 @@
+#include <cstdlib>
+
 #include "AIPlayer_Dummy.hpp"
 
 /******************************************************************************
@@ -17,6 +19,7 @@
  */
 AIPlayer_Dummy::AIPlayer_Dummy(int bettingPool) : AIPlayer(bettingPool) {
     totalEarnings = bettingPool;
+    srand(0);
 }
 
 /**
@@ -61,8 +64,12 @@ int AIPlayer_Dummy::initialBet() {
  */
 int AIPlayer_Dummy::bet(std::vector<Card> hand, std::vector<Card> river,
         unsigned int callBet) {
-    // Initial Player always calls
-    return 0;
+    // Dummy Player Calls when rand() is even
+    if ((rand() >> 2) % 2 == 0) {
+        return 2;
+    } else {
+        return 0;
+    }
 }
 
 /**
