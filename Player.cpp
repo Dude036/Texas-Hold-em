@@ -26,11 +26,13 @@ void Player::buyIn(int amount) {
     earnings -= amount;
 }
 
-void Player::addMoney(int amount) {
+bool Player::addMoney(int amount) {
     earnings += amount;
     if (earnings < 0) {
         state = BROKE;
+        return false;
     }
+    return true;
 }
 
 int Player::getEarnings() {

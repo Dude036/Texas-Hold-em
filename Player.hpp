@@ -13,7 +13,7 @@ class Player
     Player(AIPlayer, std::string);
     ~Player();
     void buyIn(int);
-    void addMoney(int);
+    bool addMoney(int);
     int getEarnings();
     void addCard(Card);
     PlayerState getState();
