@@ -13,7 +13,6 @@ class AIPlayer
     int initialBet();
     int bet(std::vector<Card>, std::vector<Card>, unsigned int);
     void endRound();
-    void addMoney(int);
   private:
     // Add anything you need
 };
