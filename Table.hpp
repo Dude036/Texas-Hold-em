@@ -25,6 +25,7 @@ class Table
 
     Deck deck;
     std::vector<Player> players;
+    std::vector<int> playerPot;
     unsigned int roundsPlayed;
 };
 

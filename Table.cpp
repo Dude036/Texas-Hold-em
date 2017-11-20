@@ -15,6 +15,7 @@ Table::~Table() {
 
 void Table::addPlayer(Player newPlayer) {
     players.push_back(newPlayer);
+    playerPot.push_back(0);
 }
 
 void Table::removePlayers() {
@@ -38,17 +39,21 @@ int Table::playRound() {
     // Buy in + Blinds
     for (int i = 0; i < (int)players.size(); ++i) {
         if (roundsPlayed + i % players.size() == 0) {
-            // double blind
+            // double blind - Current High Bet
             players[i].buyIn(BLIND * 1.5);
             tablePot += BLIND * 1.5;
+            highBet = BLIND * 1.5;
+            playerPot[i] = BLIND * 1.5;
         } else if (roundsPlayed + i % players.size() == 1) {
             // single blind
             players[i].buyIn(BLIND * 1.25);
             tablePot += BLIND * 1.25;
+            playerPot[i] = BLIND * 1.25;
         } else {
             // Just initialBet
             players[i].buyIn(BLIND);
             tablePot += BLIND;
+            playerPot[i] = BLIND;
         }
     }
 
@@ -63,7 +68,9 @@ int Table::playRound() {
     // Fill highBet
 
     // Initial Round of betting
-    playBettingRound();
+    do {
+        playBettingRound();
+    } while (playerPotsNormalized());
 
     // Deal 3 to the River
     /*Burn*/ deck.draw();
@@ -72,18 +79,27 @@ int Table::playRound() {
     river.push_back(deck.draw());
 
     // Second Round of betting
+    do {
+        playBettingRound();
+    } while (playerPotsNormalized());
 
     // Deal to River
     /*Burn*/ deck.draw();
     river.push_back(deck.draw());
 
     // Third Round of betting
+    do {
+        playBettingRound();
+    } while (playerPotsNormalized());
 
     // Deal to River
     /*Burn*/ deck.draw();
     river.push_back(deck.draw());
 
     // Final Round of betting
+    do {
+        playBettingRound();
+    } while (playerPotsNormalized());
 
     // Determine winner
 
@@ -95,13 +111,28 @@ int Table::playRound() {
 
 
 void Table::playBettingRound() {
+    for (int i = 0; i < (int)players.size(); ++i) {
+        if (players[i].getState() == FOLD) {
+            // Player has folded
+            continue;
+        }
+        // Still is IN_PLAY
+        int betAmount = players[i].bet(river, highBet);
+        if (betAmount == -1) {
+            // Fold State
+        } else if (betAmount > 0 && betAmount <= player[i].getEarning()) {
+            // Raising
+        } else {
+            // Default and Checking
 
+        }
+    }
 }
 
 bool Table::playerPotsNormalized() {
-    int normal = players[0].getEarnings();
+    int normal = playerPot[0];
     for (int i = 0; i < (int)players.size(); ++i) {
-        if (players[i].getEarnings() != normal) {
+        if (playerPot[i] != normal) {
             return false;
         }
     }
