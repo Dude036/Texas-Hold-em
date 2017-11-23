@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iostream>
 
 #include "Globals.hpp"
 #include "Player.hpp"
@@ -13,6 +14,9 @@ Table::Table() {
 Table::~Table() {}
 
 void Table::addPlayer(Player newPlayer) {
+    if (PRINT_VERBOSE) {
+        std::cout << newPlayer.getPlayerName() << " has joined the table\n";
+    }
     players.push_back(newPlayer);
     playerPot.push_back(0);
 }
@@ -21,8 +25,16 @@ void Table::removePlayers() {
     for (int i = 0; i < (int)players.size(); ++i) {
         // Remove player from game if Broke, or can't play again
         if (players[i].getState() == BROKE) {
+            if (PRINT_VERBOSE) {
+                std::cout << players[i].getPlayerName()
+                    << " can no longer play." << std::endl;
+            }
             players.erase(players.begin()+i);
         } else if (!players[i].canPlayAgain()) {
+            if (PRINT_VERBOSE) {
+                std::cout << players[i].getPlayerName()
+                    << " can no longer play." << std::endl;
+            }
             players.erase(players.begin()+i);
         }
     }
@@ -76,6 +88,13 @@ std::vector<int> Table::playRound() {
     river.push_back(deck.draw());
     river.push_back(deck.draw());
 
+    if (PRINT_VERBOSE) {
+        std::cout << "River" << std::endl;
+        for (int i = 0; i < (int)river.size(); ++i) {
+            river[i].printCard();
+        }
+    }
+
     // Second Round of betting
     do {
         playBettingRound();
@@ -84,6 +103,10 @@ std::vector<int> Table::playRound() {
     // Deal to River
     /*Burn*/ deck.draw();
     river.push_back(deck.draw());
+
+    if (PRINT_VERBOSE) {
+        river[3].printCard();
+    }
 
     // Third Round of betting
     do {
@@ -94,6 +117,11 @@ std::vector<int> Table::playRound() {
     /*Burn*/ deck.draw();
     river.push_back(deck.draw());
 
+    if (PRINT_VERBOSE) {
+        river[4].printCard();
+        std::cout << std::endl;
+    }
+
     // Final Round of betting
     do {
         playBettingRound();
@@ -101,6 +129,14 @@ std::vector<int> Table::playRound() {
 
     // Determine winner
     std::vector<int> winner = whoWon();
+
+    if (PRINT_VERBOSE) {
+        std::cout << "Round Winners:" << std::endl;
+        for (int i = 0; i < (int)winner.size(); ++i) {
+            std::cout << players[winner[i]].getPlayerName() << std::endl;
+        }
+        std::cout << std::endl << std::endl;
+    }
 
     // Special cases for Winner
     int dividedPot = tablePot / winner.size();
@@ -165,9 +201,15 @@ void Table::playBettingRound() {
         int betAmount = players[i].bet(river, highBet);
         if (betAmount == -1) {
             // Fold State
+            if (PRINT_VERBOSE) {
+                std::cout << "A Player has folded." << std::endl;
+            }
             players[i].fold();
         } else if (betAmount > 0 && betAmount <= players[i].getEarnings()) {
             // Raising
+            if (PRINT_VERBOSE) {
+                std::cout << "A Player has raised." << std::endl;
+            }
             int diff = highBet - playerPot[i];
             if (players[i].addMoney(-1*diff)) {
                 tablePot += betAmount + diff;
@@ -177,6 +219,9 @@ void Table::playBettingRound() {
                 players[i].fold();
             }
         } else {
+            if (PRINT_VERBOSE) {
+                std::cout << "A Player checks." << std::endl;
+            }
             // Default and Checking
             int diff = highBet - playerPot[i];
             if (players[i].addMoney(-1*diff)) {
