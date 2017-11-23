@@ -31,7 +31,7 @@ void Deck::fillDeck() {
 }
 
 Card Deck::draw() {
-    // Cehck if the deck is empty.
+    // Check if the deck is empty.
     if (pullDeck.size() == 0) {
         fillDeck();
         shuffle();
