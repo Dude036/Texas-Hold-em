@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iomanip>
 #include <iostream>
 
 #include "Globals.hpp"
@@ -131,10 +132,16 @@ std::vector<int> Table::playRound() {
     std::vector<int> winner = whoWon();
 
     if (PRINT_VERBOSE) {
-        std::cout << "Round Winners:" << std::endl;
+        std::cout << std::endl << "=====Round Winners:=====" << std::endl;
         for (int i = 0; i < (int)winner.size(); ++i) {
             std::cout << players[winner[i]].getPlayerName() << std::endl;
         }
+        std::cout << "==Winning Hand==" << std::endl;
+        for (int i = 0; i < (int)river.size(); ++i) {
+            river[i].printCard();
+        }
+        players[winner[0]].getHighCard(std::vector<Card>()).printCard();
+        players[winner[0]].getSecondHigh(std::vector<Card>()).printCard();
         std::cout << std::endl << std::endl;
     }
 
@@ -191,7 +198,25 @@ int Table::getPlayerEarningsbyIndex(int i) {
     return players[i].getEarnings();
 }
 
+std::string getPlayerStateString(PlayerState ps) {
+    if (ps == IN_PLAY) {
+        return "In play";
+    } else if (ps == FOLD) {
+        return "Fold";
+    } else if (ps == BROKE) {
+        return "Broke";
+    }
+}
+
 void Table::playBettingRound() {
+    if (PRINT_VERBOSE) {
+        std::cout << std::endl << "==Current Pots:==" << std::endl;
+        for (int i = 0; i < (int)playerPot.size(); ++i) {
+            std::cout << std::left << std::setw(15) << players[i].getPlayerName()
+                 << ":" << std::setw(6) << playerPot[i] << std::setw(10)
+                 << getPlayerStateString(players[i].getState()) << std::endl;
+        }
+    }
     for (int i = 0; i < (int)players.size(); ++i) {
         if (players[i].getState() == FOLD) {
             // Player has folded
@@ -202,15 +227,15 @@ void Table::playBettingRound() {
         if (betAmount == -1) {
             // Fold State
             if (PRINT_VERBOSE) {
-                std::cout << "A Player has folded." << std::endl;
+                std::cout << players[i].getPlayerName() << " has folded." << std::endl;
             }
             players[i].fold();
         } else if (betAmount > 0 && betAmount <= players[i].getEarnings()) {
             // Raising
             if (PRINT_VERBOSE) {
-                std::cout << "A Player has raised." << std::endl;
+                std::cout << players[i].getPlayerName() << " has raised." << std::endl;
             }
-            int diff = highBet - playerPot[i];
+            int diff = abs(highBet - playerPot[i]);
             if (players[i].addMoney(-1*diff)) {
                 tablePot += betAmount + diff;
                 playerPot[i] += betAmount;
@@ -220,10 +245,10 @@ void Table::playBettingRound() {
             }
         } else {
             if (PRINT_VERBOSE) {
-                std::cout << "A Player checks." << std::endl;
+                std::cout << players[i].getPlayerName() << " checks." << std::endl;
             }
             // Default and Checking
-            int diff = highBet - playerPot[i];
+            int diff = abs(highBet - playerPot[i]);
             if (players[i].addMoney(-1*diff)) {
                 tablePot += diff;
                 playerPot[i]  += diff;
@@ -237,7 +262,7 @@ void Table::playBettingRound() {
 bool Table::playerPotsNormalized() {
     int normal = playerPot[0];
     for (int i = 0; i < (int)players.size(); ++i) {
-        if (playerPot[i] != normal) {
+        if (playerPot[i] != normal && players[i].getState() != FOLD) {
             return false;
         }
     }
