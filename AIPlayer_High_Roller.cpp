@@ -57,6 +57,7 @@ void AIPlayer_High_Roller::updateBalance(int amount) {
  * @param hand Vector containing your two cards
  * @param river How many cards are currently in the river
  * @param callBet this is the highest bet.
+ * @param RankedWin The current state of your hand and river. See Globals.hpp enum
  * @return How much to bet.
  *      if folding,  return -1
  *      if checking, return 0
@@ -73,13 +74,17 @@ int AIPlayer_High_Roller::bet(std::vector<Card> hand, std::vector<Card> river,
         roundBets++;
     }
     if (highState > STRAIGHT) {
-        if (roundBets > 5) {
+        if (roundBets < 5) {
             return 10;
         } else {
             return 0;
         }
     } else {
-        return 0;
+        if (roundBets < 5) {
+            return 2;
+        } else {
+            return 0;
+        }
     }
 }
 
