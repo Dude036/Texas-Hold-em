@@ -10,7 +10,7 @@
 class Player
 {
   public:
-    Player(AIPlayer, std::string);
+    Player(AIPlayer*, std::string);
     ~Player();
     void buyIn(int);
     bool addMoney(int);
@@ -29,10 +29,11 @@ class Player
     int initialBet();
     int bet(std::vector<Card>, unsigned int);
     void endRound(std::vector<Card>, std::vector<Card>, int);
+    void updateBalance(int);
 
   private:
     std::vector<Card> hand;
-    AIPlayer player;
+    AIPlayer* aiPlayer;
     PlayerState state;
     std::string playerName;
     int earnings;

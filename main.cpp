@@ -12,7 +12,7 @@ int main(int argc, char const *argv[])
     std::map<std::string, AIPlayer*> map = getPlayerMap();
 
     for (auto const x : map) {
-        game.addUser(Player(*x.second, x.first));
+        game.addUser(Player(x.second, x.first));
     }
 
     game.play(rounds);

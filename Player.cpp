@@ -7,8 +7,8 @@
 #include "Globals.hpp"
 #include "Player.hpp"
 
-Player::Player(AIPlayer newPlayer, std::string newName)
-: player(newPlayer), playerName(newName) {
+Player::Player(AIPlayer* newPlayer, std::string newName)
+: aiPlayer(newPlayer), playerName(newName) {
     earnings = INITIAL_POT;
     state = IN_PLAY;
 }
@@ -20,6 +20,7 @@ void Player::buyIn(int amount) {
         state = BROKE;
         return;
     }
+    updateBalance(amount);
     earnings -= amount;
 }
 
@@ -45,6 +46,9 @@ PlayerState Player::getState() {
 }
 
 void Player::fold() {
+    if (PRINT_VERBOSE) {
+        std::cout << playerName << " has folded." << std::endl;
+    }
     state = FOLD;
 }
 
@@ -204,15 +208,20 @@ std::string Player::getPlayerName() {
 
 /* AI Player Determined Functions */
 int Player::initialBet() {
-    return player.initialBet();
+    return aiPlayer->initialBet();
 }
 
 int Player::bet(std::vector<Card> river, unsigned int callBet) {
-    return player.bet(hand, river, callBet);
+    return aiPlayer->bet(hand, river, callBet, getHighState(river));
 }
 
 
 void Player::endRound(std::vector<Card> river, std::vector<Card> played,
         int net) {
-    player.endRound(hand, river, played, net);
+    aiPlayer->endRound(hand, river, played, net);
+}
+
+
+void Player::updateBalance(int amount) {
+    aiPlayer->updateBalance(amount);
 }
