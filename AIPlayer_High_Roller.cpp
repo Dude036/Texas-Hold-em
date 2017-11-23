@@ -1,6 +1,4 @@
-#include <cstdlib>
-
-#include "AIPlayer_Dummy.hpp"
+#include "AIPlayer_High_Roller.hpp"
 
 /******************************************************************************
  * This is a Basic Implementation of  the virtual functions from the inherited
@@ -17,9 +15,8 @@
  * @brief Basic Constructor
  * @param int Your initial betting pool
  */
-AIPlayer_Dummy::AIPlayer_Dummy(int bettingPool) : AIPlayer(bettingPool) {
-    totalEarnings = bettingPool;
-    srand(0);
+AIPlayer_High_Roller::AIPlayer_High_Roller(int bettingPool) : AIPlayer(bettingPool) {
+    totalEarnings = initialEarnings = bettingPool;
 }
 
 /**
@@ -27,7 +24,7 @@ AIPlayer_Dummy::AIPlayer_Dummy(int bettingPool) : AIPlayer(bettingPool) {
  * @brief The inital bet of the player
  * @return How much to initially bet
  */
-int AIPlayer_Dummy::initialBet() {
+int AIPlayer_High_Roller::initialBet() {
     // If I have less than $10
     if (totalEarnings / 10 < 1) {
         // All in
@@ -42,14 +39,8 @@ int AIPlayer_Dummy::initialBet() {
     return totalEarnings / 100;
 }
 
-/**
- * You may initially bet as much as your earnings
- * @brief The inital bet of the player
- * @return How much to initially bet
- */
-void AIPlayer_Dummy::updateBalance(int amount) {
+void AIPlayer_High_Roller::updateBalance(int amount) {
     totalEarnings += amount;
-    return;
 }
 
 /**
@@ -72,11 +63,21 @@ void AIPlayer_Dummy::updateBalance(int amount) {
  *      if raising,  return (how much more to raise)
  *          callbet == 5, returning 5 will raise the bet to 10;
  */
-int AIPlayer_Dummy::bet(std::vector<Card> hand, std::vector<Card> river,
+int AIPlayer_High_Roller::bet(std::vector<Card> hand, std::vector<Card> river,
         unsigned int callBet, RankedWin highState) {
-    // Dummy Player Calls when rand() / 2 is even
-    if ((rand() >> 2) % 2 == 0) {
-        return 2;
+    // if we haven't bet this round,
+    if (river.size() == 0 && callBet == 0) {
+        roundBets = 1;
+        return 5;
+    } else {
+        roundBets++;
+    }
+    if (highState > STRAIGHT) {
+        if (roundBets > 5) {
+            return 10;
+        } else {
+            return 0;
+        }
     } else {
         return 0;
     }
@@ -84,7 +85,7 @@ int AIPlayer_Dummy::bet(std::vector<Card> hand, std::vector<Card> river,
 
 /**
  * This function will be called at the end of every game round. This
- / will contain all the cards that weren't folded. If there was a fold,
+ * will contain all the cards that weren't folded. If there was a fold,
  * that hand is discarded. There's nothing to do with the cards, because
  * the round is
  * @brief Contains all of the cards you may card about for counting cards
@@ -92,7 +93,7 @@ int AIPlayer_Dummy::bet(std::vector<Card> hand, std::vector<Card> river,
  * @param std::vector<Card> All of the Other Players hands
  * @param std::vector<Card> The River
  */
-void AIPlayer_Dummy::endRound(std::vector<Card> hand, std::vector<Card> river,
+void AIPlayer_High_Roller::endRound(std::vector<Card> hand, std::vector<Card> river,
         std::vector<Card> other, int net) {
     // Default Player doesn't care about counting cards.
     return;

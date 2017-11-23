@@ -17,6 +17,14 @@ int AIPlayer::initialBet() {
 }
 
 /**
+ * @brief A helper function called when buying in
+ * @param int Amount to modify
+ */
+void AIPlayer::updateBalance(int amount) {
+    return;
+}
+
+/**
  * This function is called every time a player may make a bet.
  * hand will always be populated. There are a few cases for the river:
  * Case 1: River has no cards -> Initial round of betting.
@@ -37,7 +45,7 @@ int AIPlayer::initialBet() {
  *          callbet == 5, returning 5 will raise the bet to 10;
  */
 int AIPlayer::bet(std::vector<Card> hand, std::vector<Card> river,
-        unsigned int callBet) {
+        unsigned int callBet, RankedWin highState) {
     // Initial Player always calls
     return 0;
 }
